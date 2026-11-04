@@ -43,20 +43,21 @@ class QuizGameTests(unittest.TestCase):
         self.assertFalse(quiz.check_answer(1))
 
     def test_add_quiz_persists_and_reloads(self):
-        with patch("builtins.input", side_effect=["추가 문제", "가", "나", "다", "라", "3"]):
+        with patch("builtins.input", side_effect=["추가 문제", "가", "나", "다", "라", "3", "추가 힌트"]):
             self.game.add_quiz()
         reloaded = QuizGame(self.path)
         self.assertEqual(len(reloaded.quizzes), 6)
         self.assertEqual(reloaded.quizzes[-1].question, "추가 문제")
         self.assertEqual(reloaded.quizzes[-1].answer, 3)
+        self.assertEqual(reloaded.quizzes[-1].hint, "추가 힌트")
         self.assertIn("추가 문제", self.path.read_text(encoding="utf-8"))
 
     def test_high_score_is_preserved_after_lower_score(self):
         answers = [str(quiz.answer) for quiz in self.game.quizzes]
-        with patch("builtins.input", side_effect=answers):
+        with patch("main.random.sample", return_value=self.game.quizzes.copy()), patch("builtins.input", side_effect=["5"] + answers):
             self.game.play()
         wrong_answers = [str(quiz.answer % 4 + 1) for quiz in self.game.quizzes]
-        with patch("builtins.input", side_effect=wrong_answers):
+        with patch("main.random.sample", return_value=self.game.quizzes.copy()), patch("builtins.input", side_effect=["5"] + wrong_answers):
             self.game.play()
         reloaded = QuizGame(self.path)
         self.assertEqual(reloaded.best_score, 5)
@@ -66,7 +67,7 @@ class QuizGameTests(unittest.TestCase):
         self.game.show_score()
         self.assertIn("아직 퀴즈를 풀지 않았습니다", self.output.getvalue())
         wrong = [str(quiz.answer % 4 + 1) for quiz in self.game.quizzes]
-        with patch("builtins.input", side_effect=wrong):
+        with patch("main.random.sample", return_value=self.game.quizzes.copy()), patch("builtins.input", side_effect=["5"] + wrong):
             self.game.play()
         self.assertEqual(self.game.best_score, 0)
         self.assertEqual(self.game.played_count, 1)
@@ -131,6 +132,81 @@ class QuizGameTests(unittest.TestCase):
         with patch("builtins.input", side_effect=["2", "미완성 문제", EOFError()]):
             self.game.run()
         self.assertEqual(len(QuizGame(self.path).quizzes), 5)
+
+    def test_selected_count_and_random_sampling(self):
+        # Use real random.sample: verify the selected count and absence of duplicates.
+        from datetime import datetime
+        with patch("builtins.input", side_effect=["0", "6", "abc", "", " 3 ", "1", "1", "1"]), patch.object(Quiz, "display", autospec=True) as display:
+            self.game.play()
+        shown = [call.args[0] for call in display.call_args_list]
+        self.assertEqual(len(shown), 3)
+        self.assertEqual(len({id(quiz) for quiz in shown}), 3)
+        self.assertTrue(all(quiz in self.game.quizzes for quiz in shown))
+        reloaded = QuizGame(self.path)
+        record = reloaded.history[-1]
+        self.assertEqual(record["total_questions"], 3)
+        self.assertGreaterEqual(record["score"], 0)
+        self.assertLessEqual(record["score"], record["correct_count"])
+        self.assertIsNotNone(datetime.fromisoformat(record["played_at"]).utcoffset())
+
+    def test_repeated_hint_gives_zero_points_and_zero_high_score(self):
+        quiz = self.game.quizzes[0]
+        quiz.hint = "숫자를 세어 보세요."
+        with patch("main.random.sample", return_value=[quiz]), patch("builtins.input", side_effect=["1", " H ", "h", str(quiz.answer)]):
+            self.game.play()
+        reloaded = QuizGame(self.path)
+        self.assertEqual(reloaded.best_score, 0)
+        self.assertEqual(reloaded.played_count, 1)
+        self.assertEqual(reloaded.history[-1]["correct_count"], 1)
+        self.assertEqual(reloaded.history[-1]["score"], 0)
+        self.assertEqual(reloaded.quizzes[0].hint, quiz.hint)
+        self.game.show_history()
+        self.assertIn("힌트 차감 후 점수: 0점", self.output.getvalue())
+
+    def test_missing_hint_does_not_reduce_points(self):
+        quiz = self.game.quizzes[0]
+        quiz.hint = ""
+        with patch("main.random.sample", return_value=[quiz]), patch("builtins.input", side_effect=["1", "h", str(quiz.answer)]):
+            self.game.play()
+        self.assertEqual(self.game.best_score, 1)
+        self.assertEqual(self.game.history[-1]["score"], 1)
+        self.assertIn("등록된 힌트가 없습니다", self.output.getvalue())
+
+    def test_delete_cancel_then_confirm_and_reload(self):
+        original = self.game.quizzes.copy()
+        for answers in (["0"], ["1", "2"]):
+            with patch("builtins.input", side_effect=answers):
+                self.game.delete_quiz()
+            self.assertEqual(self.game.quizzes, original)
+        with patch("builtins.input", side_effect=["abc", "9", "2", "1"]):
+            self.game.delete_quiz()
+        expected = [quiz.question for quiz in original if quiz is not original[1]]
+        self.assertEqual([quiz.question for quiz in QuizGame(self.path).quizzes], expected)
+
+    def test_delete_save_failure_restores_original_position(self):
+        self.game.save_state()
+        original = self.game.quizzes.copy()
+        original_file = self.path.read_bytes()
+        with patch("builtins.input", side_effect=["2", "1"]), patch.object(Path, "replace", side_effect=PermissionError("쓰기 차단")):
+            self.game.delete_quiz()
+        self.assertEqual(self.game.quizzes, original)
+        self.assertEqual(self.path.read_bytes(), original_file)
+
+    def test_legacy_data_keeps_quizzes_score_and_count(self):
+        legacy = {
+            "quizzes": [{"question": "이전 문제", "choices": ["가", "나", "다", "라"], "answer": 2}],
+            "best_score": 3,
+            "played_count": 4,
+        }
+        self.path.write_text(json.dumps(legacy, ensure_ascii=False), encoding="utf-8")
+        reloaded = QuizGame(self.path)
+        self.assertEqual(reloaded.quizzes[0].question, "이전 문제")
+        self.assertEqual(reloaded.quizzes[0].hint, "")
+        self.assertEqual(reloaded.best_score, 3)
+        self.assertEqual(reloaded.played_count, 4)
+        self.assertEqual(reloaded.history, [])
+        reloaded.show_history()
+        self.assertIn("저장된 게임 기록이 없습니다", self.output.getvalue())
 
     def test_cli_works_from_another_directory_and_handles_eof(self):
         # Separate script copy prevents touching the project's submitted state file.
