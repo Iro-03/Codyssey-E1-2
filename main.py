@@ -1,17 +1,18 @@
 """기초 수학과 컴퓨터 상식 퀴즈 게임 (Python 3.10 이상)."""
 
 import json
+import random
 from pathlib import Path
-
+from datetime import datetime
 
 STATE_PATH = Path(__file__).resolve().parent / "state.json"
 
-
 class Quiz:
-    def __init__(self, question, choices, answer):
+    def __init__(self, question, choices, answer, hint=""):
         self.question = question
         self.choices = choices
         self.answer = answer
+        self.hint = hint
 
     def display(self):
         print(self.question)
@@ -22,7 +23,6 @@ class Quiz:
     def check_answer(self, user_answer):
         return user_answer == self.answer
 
-
 def read_non_empty_text(prompt):
     while True:
         text = input(prompt).strip()
@@ -31,7 +31,6 @@ def read_non_empty_text(prompt):
             return text
 
         print("내용을 입력하세요. 빈 입력은 사용할 수 없습니다.")
-
 
 def read_number(prompt, minimum, maximum):
     while True:
@@ -47,7 +46,6 @@ def read_number(prompt, minimum, maximum):
             return number
 
         print(f"{minimum}~{maximum} 사이의 숫자를 입력하세요.")
-
 
 class QuizGame:
     def __init__(self, state_path=STATE_PATH):
@@ -82,6 +80,7 @@ class QuizGame:
 
         self.best_score = 0
         self.played_count = 0
+        self.history = []
         self.load_state()
 
     def show_menu(self):
@@ -93,37 +92,94 @@ class QuizGame:
         print("3. 퀴즈 목록")
         print("4. 점수 확인")
         print("5. 종료")
+        print("6. 퀴즈 삭제")
+        print("7. 게임 기록")
 
     def play(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
             return
 
-        correct_count = 0
-        print(f"\n퀴즈를 시작합니다! 총 {len(self.quizzes)}문제입니다.")
+        question_count = read_number(
+            f"몇 문제를 풀까요? (1~{len(self.quizzes)}): ",
+            1,
+            len(self.quizzes)
+        )
 
-        for number, quiz in enumerate(self.quizzes, start=1):
+        questions = random.sample(self.quizzes, question_count)
+
+        correct_count = 0
+        game_score = 0
+
+        print(f"\n퀴즈를 시작합니다! 총 {len(questions)}문제입니다.")
+
+        for number, quiz in enumerate(questions, start=1):
             print(f"\n[문제 {number}]")
             quiz.display()
 
-            user_answer = read_number("정답 번호(1~4): ", 1, 4)
+            hint_used = False
+
+            while True:
+                answer_text = input(
+                    "정답 번호(1~4), 힌트 보기(h): "
+                ).strip().lower()
+
+                if answer_text == "h":
+                    if not quiz.hint:
+                        print("이 문제에는 등록된 힌트가 없습니다.")
+                    elif hint_used:
+                        print(f"이미 확인한 힌트: {quiz.hint}")
+                    else:
+                        print(f"힌트: {quiz.hint}")
+                        print("힌트를 사용하여 이 문제의 획득 점수가 1점 차감됩니다.")
+                        hint_used = True
+
+                    continue
+
+                try:
+                    user_answer = int(answer_text)
+                except ValueError:
+                    print("1~4 사이의 숫자 또는 h를 입력하세요.")
+                    continue
+
+                if 1 <= user_answer <= 4:
+                    break
+
+                print("1~4 사이의 숫자 또는 h를 입력하세요.")
 
             if quiz.check_answer(user_answer):
-                print("정답입니다!")
                 correct_count += 1
+
+                if hint_used:
+                    print("정답입니다! 힌트를 사용하여 획득 점수는 0점입니다.")
+                else:
+                    print("정답입니다! 1점을 획득했습니다.")
+                    game_score += 1
             else:
                 print(f"오답입니다. 정답은 {quiz.answer}번입니다.")
 
         print(
-            f"\n결과: {len(self.quizzes)}문제 중 "
+            f"\n결과: {len(questions)}문제 중 "
             f"{correct_count}문제 정답!"
         )
+        print(f"힌트 차감 후 점수: {game_score}점")
 
         self.played_count += 1
 
-        if self.played_count == 1 or correct_count > self.best_score:
-            self.best_score = correct_count
+        if self.played_count == 1 or game_score > self.best_score:
+            self.best_score = game_score
             print(f"새로운 최고 기록입니다! {self.best_score}점")
+
+        record = {
+            "played_at": datetime.now().astimezone().isoformat(
+                timespec="seconds"
+            ),
+            "total_questions": len(questions),
+            "correct_count": correct_count,
+            "score": game_score,
+        }
+
+        self.history.append(record)
 
         if self.save_state():
             print("파일 저장이 완료되었습니다.")
@@ -139,8 +195,9 @@ class QuizGame:
             choices.append(text)
 
         answer = read_number("정답 번호(1~4): ", 1, 4)
+        hint = input("힌트(없으면 Enter): ").strip()
 
-        new_quiz = Quiz(question, choices, answer)
+        new_quiz = Quiz(question, choices, answer, hint)
         self.quizzes.append(new_quiz)
 
         print("퀴즈가 추가되었습니다!")
@@ -158,13 +215,51 @@ class QuizGame:
         for number, quiz in enumerate(self.quizzes, start=1):
             print(f"[{number}] {quiz.question}")
 
+    def delete_quiz(self):
+        if not self.quizzes:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+
+        self.show_quizzes()
+
+        number = read_number(
+            "삭제할 문제 번호(취소: 0): ",
+            0,
+            len(self.quizzes)
+        )
+
+        if number == 0:
+            print("삭제를 취소했습니다.")
+            return
+
+        quiz = self.quizzes[number - 1]
+        print(f"\n삭제할 문제: {quiz.question}")
+
+        confirmation = read_number(
+            "정말 삭제할까요? (1: 삭제, 2: 취소): ",
+            1,
+            2
+        )
+
+        if confirmation == 2:
+            print("삭제를 취소했습니다.")
+            return
+
+        deleted_quiz = self.quizzes.pop(number - 1)
+
+        if self.save_state():
+            print("퀴즈를 삭제하고 파일에 저장했습니다.")
+        else:
+            self.quizzes.insert(number - 1, deleted_quiz)
+            print("저장에 실패하여 삭제를 취소했습니다.")
+
     def show_score(self):
         if self.played_count == 0:
             print("\n아직 퀴즈를 풀지 않았습니다.")
             return
 
         print(f"\n최고 점수: {self.best_score}점")
-        print("점수 기준: 정답 1개당 1점")
+        print("점수 기준: 정답 1개당 1점, 힌트를 사용한 문제는 정답이어도 0점")
         print(f"완료한 게임: {self.played_count}회")
 
     def save_state(self):
@@ -175,11 +270,13 @@ class QuizGame:
                     "question": quiz.question,
                     "choices": quiz.choices,
                     "answer": quiz.answer,
+                    "hint": quiz.hint,
                 }
                 for quiz in self.quizzes
             ],
             "best_score": self.best_score,
             "played_count": self.played_count,
+            "history": self.history,
         }
         temporary_path = self.state_path.with_suffix(".json.tmp")
 
@@ -205,7 +302,34 @@ class QuizGame:
             quizzes_data = data["quizzes"]
             best_score = data["best_score"]
             played_count = data["played_count"]
+            history = data.get("history", [])
 
+            if not isinstance(history, list):
+                raise ValueError("history는 목록이어야 합니다.")
+
+            for record in history:
+                if not isinstance(record, dict):
+                    raise ValueError("게임 기록은 객체여야 합니다.")
+
+                played_at = record["played_at"]
+                total = record["total_questions"]
+                correct = record["correct_count"]
+                score = record["score"]
+
+                if not isinstance(played_at, str):
+                    raise ValueError("기록 시간은 문자열이어야 합니다.")
+
+                datetime.fromisoformat(played_at)
+
+                if type(total) is not int or total < 1:
+                    raise ValueError("출제 문제 수는 1 이상의 정수여야 합니다.")
+
+                if type(correct) is not int or not 0 <= correct <= total:
+                    raise ValueError("정답 수가 올바르지 않습니다.")
+
+                if type(score) is not int or not 0 <= score <= correct:
+                    raise ValueError("기록 점수가 올바르지 않습니다.")
+            
             if not isinstance(quizzes_data, list):
                 raise ValueError("quizzes는 목록이어야 합니다.")
             if type(best_score) is not int or best_score < 0:
@@ -222,7 +346,10 @@ class QuizGame:
                 question = item["question"]
                 choices = item["choices"]
                 answer = item["answer"]
+                hint = item.get("hint", "")
 
+                if not isinstance(hint, str):
+                    raise ValueError("힌트는 문자열이어야 합니다.")
                 if not isinstance(question, str) or not question.strip():
                     raise ValueError("문제는 비어 있지 않은 문자열이어야 합니다.")
                 if not isinstance(choices, list) or len(choices) != 4:
@@ -232,7 +359,7 @@ class QuizGame:
                 if type(answer) is not int or not 1 <= answer <= 4:
                     raise ValueError("정답 번호는 1~4의 정수여야 합니다.")
 
-                loaded_quizzes.append(Quiz(question, choices, answer))
+                loaded_quizzes.append(Quiz(question, choices, answer, hint))
 
         except FileNotFoundError:
             print("저장 파일이 없어 기본 퀴즈로 시작합니다.")
@@ -247,6 +374,7 @@ class QuizGame:
         self.quizzes = loaded_quizzes
         self.best_score = best_score
         self.played_count = played_count
+        self.history = history
         print(
             f"저장된 데이터를 불러왔습니다. "
             f"(퀴즈 {len(self.quizzes)}개, 최고 점수 {self.best_score}점)"
@@ -256,7 +384,7 @@ class QuizGame:
         try:
             while True:
                 self.show_menu()
-                choice = read_number("선택: ", 1, 5)
+                choice = read_number("선택: ", 1, 7)
 
                 if choice == 1:
                     self.play()
@@ -269,13 +397,33 @@ class QuizGame:
                 elif choice == 5:
                     print("퀴즈 게임을 종료합니다.")
                     break
-
+                elif choice == 6:
+                    self.delete_quiz()
+                elif choice == 7:
+                    self.show_history()
         except (KeyboardInterrupt, EOFError):
             print("\n입력이 중단되어 퀴즈 게임을 종료합니다.")
         finally:
             if self.save_state():
                 print("데이터를 저장했습니다.")
 
+    def show_history(self):
+        if not self.history:
+            print("\n저장된 게임 기록이 없습니다.")
+            return
+
+        print(f"\n게임 기록: 총 {len(self.history)}회")
+        print("최신 기록부터 표시합니다.")
+
+        for number, record in enumerate(
+            reversed(self.history),
+            start=1
+        ):
+            print(f"\n[기록 {number}]")
+            print(f"날짜·시간: {record['played_at']}")
+            print(f"출제 문제 수: {record['total_questions']}")
+            print(f"정답 수: {record['correct_count']}")
+            print(f"힌트 차감 후 점수: {record['score']}점")
 
 if __name__ == "__main__":
     game = QuizGame()

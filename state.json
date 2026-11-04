@@ -8,7 +8,8 @@
                 "3",
                 "H"
             ],
-            "answer": 2
+            "answer": 2,
+            "hint": ""
         },
         {
             "question": "다음 중 컴퓨터 언어가 아닌 것은?",
@@ -18,7 +19,8 @@
                 "Air",
                 "Python"
             ],
-            "answer": 3
+            "answer": 3,
+            "hint": ""
         },
         {
             "question": "2026년 기준, 2003년생의 세는나이는?",
@@ -28,17 +30,8 @@
                 "24",
                 "25"
             ],
-            "answer": 3
-        },
-        {
-            "question": "다음 중 반복문에 사용하는 키워드는?",
-            "choices": [
-                "if",
-                "def",
-                "class",
-                "while"
-            ],
-            "answer": 4
+            "answer": 3,
+            "hint": ""
         },
         {
             "question": "4!의 값은?",
@@ -48,19 +41,47 @@
                 "24",
                 "32"
             ],
-            "answer": 3
+            "answer": 3,
+            "hint": ""
         },
         {
-            "question": "3+3=?",
+            "question": "Python에서 함수 정의에 사용하는 키워드는?",
             "choices": [
-                "4",
-                "5",
-                "6",
-                "7"
+                "class",
+                "for",
+                "def",
+                "if"
             ],
-            "answer": 3
+            "answer": 3,
+            "hint": "define의 앞 세 글자입니다."
         }
     ],
-    "best_score": 3,
-    "played_count": 1
+    "best_score": 6,
+    "played_count": 16,
+    "history": [
+        {
+            "played_at": "2026-11-04T21:10:21+09:00",
+            "total_questions": 1,
+            "correct_count": 1,
+            "score": 1
+        },
+        {
+            "played_at": "2026-11-04T21:10:35+09:00",
+            "total_questions": 2,
+            "correct_count": 2,
+            "score": 2
+        },
+        {
+            "played_at": "2026-11-04T21:38:53+09:00",
+            "total_questions": 3,
+            "correct_count": 3,
+            "score": 3
+        },
+        {
+            "played_at": "2026-11-04T21:40:15+09:00",
+            "total_questions": 3,
+            "correct_count": 3,
+            "score": 2
+        }
+    ]
 }
