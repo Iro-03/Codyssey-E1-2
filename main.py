@@ -105,17 +105,52 @@ class QuizGame:
         questions = random.sample(self.quizzes, question_count)
 
         correct_count = 0
+        game_score = 0
+
         print(f"\n퀴즈를 시작합니다! 총 {len(questions)}문제입니다.")
 
         for number, quiz in enumerate(questions, start=1):
             print(f"\n[문제 {number}]")
             quiz.display()
 
-            user_answer = read_number("정답 번호(1~4): ", 1, 4)
+            hint_used = False
+
+            while True:
+                answer_text = input(
+                    "정답 번호(1~4), 힌트 보기(h): "
+                ).strip().lower()
+
+                if answer_text == "h":
+                    if not quiz.hint:
+                        print("이 문제에는 등록된 힌트가 없습니다.")
+                    elif hint_used:
+                        print(f"이미 확인한 힌트: {quiz.hint}")
+                    else:
+                        print(f"힌트: {quiz.hint}")
+                        print("힌트를 사용하여 이 문제의 획득 점수가 1점 차감됩니다.")
+                        hint_used = True
+
+                    continue
+
+                try:
+                    user_answer = int(answer_text)
+                except ValueError:
+                    print("1~4 사이의 숫자 또는 h를 입력하세요.")
+                    continue
+
+                if 1 <= user_answer <= 4:
+                    break
+
+                print("1~4 사이의 숫자 또는 h를 입력하세요.")
 
             if quiz.check_answer(user_answer):
-                print("정답입니다!")
                 correct_count += 1
+
+                if hint_used:
+                    print("정답입니다! 힌트를 사용하여 획득 점수는 0점입니다.")
+                else:
+                    print("정답입니다! 1점을 획득했습니다.")
+                    game_score += 1
             else:
                 print(f"오답입니다. 정답은 {quiz.answer}번입니다.")
 
@@ -123,6 +158,7 @@ class QuizGame:
             f"\n결과: {len(questions)}문제 중 "
             f"{correct_count}문제 정답!"
         )
+        print(f"힌트 차감 후 점수: {game_score}점")
 
         self.played_count += 1
 
@@ -170,7 +206,7 @@ class QuizGame:
             return
 
         print(f"\n최고 점수: {self.best_score}점")
-        print("점수 기준: 정답 1개당 1점")
+        print("점수 기준: 정답 1개당 1점, 힌트를 사용한 문제는 정답이어도 0점")
         print(f"완료한 게임: {self.played_count}회")
 
     def save_state(self):
