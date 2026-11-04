@@ -1,6 +1,6 @@
 # 실제 실행 화면 촬영 순서
 
-실행 화면 9장과 개발 환경·Git 그래프 2장, 총 **11장**을 촬영하여 루트 README에 반영했습니다. 아래는 촬영 절차 기록입니다.
+실행 화면 9장과 개발 환경·Git 그래프 2장, clone·pull 증빙 2장을 더해 총 **13장**을 촬영하여 루트 README에 반영했습니다. 아래는 촬영 절차 기록입니다.
 
 프로젝트 폴더에서 `python main.py` 또는 `py main.py`로 실행합니다.
 화면 캡처는 Windows 캡처 도구 또는 VS Code 터미널 화면을 직접 이용하세요.
@@ -49,3 +49,10 @@ git log --oneline --graph --all
 git add docs/screenshots README.md state.json
 git commit -m "Docs: 직접 실행한 화면과 재실행 데이터 유지 증빙 추가"
 ```
+
+## Git 원격 실습 증빙
+
+- clone.png: 별도 폴더로 저장소 복제 완료
+- pull.png: 복제 폴더에서 push 후 원래 폴더에서 pull 및 UTF-8로 문장 확인
+
+두 화면 모두 촬영 및 README 반영을 완료했습니다.

@@ -61,7 +61,7 @@ E1-2/
     ├── github_submission.md   # 직접 업로드 및 clone/pull 실습
     └── screenshots/
         ├── README.md          # 촬영 안내
-        └── *.png              # 직접 촬영한 실행·환경·Git 화면 11장
+        └── *.png              # 직접 촬영한 실행·환경·Git 실습 화면 13장
 ```
 
 ## 데이터 파일 설명
@@ -158,6 +158,18 @@ JSON 문법, 인코딩, 필드 구조가 손상되었으면 안내 후 기본 �
 
 ![기능별 커밋과 브랜치 병합 그래프](docs/screenshots/git_log.png)
 
+### 저장소 복제 실습 (clone)
+원격 저장소를 별도 폴더 `E1-2-clone-practice`로 복제했습니다.
+
+![별도 폴더로 GitHub 저장소 복제](docs/screenshots/clone.png)
+
+### 복제 폴더에서 push 후 원래 프로젝트에서 pull
+복제 폴더에서 README 변경사항을 커밋·업로드한 뒤, 원래 `E1-2` 폴더에서
+`git pull origin main`으로 해당 커밋을 받아 Fast-forward로 반영했습니다.
+PowerShell 출력의 한글은 UTF-8을 명시하여 정상적으로 확인했습니다.
+
+![복제 폴더의 push와 원래 프로젝트의 pull 및 변경사항 확인](docs/screenshots/pull.png)
+
 촬영 방법은 [스크린샷 안내](docs/screenshots/README.md)를 참고하세요.
 
 ## 검증 방법
@@ -173,7 +185,9 @@ Windows에서는 `python` 대신 `py`를 사용할 수 있습니다.
 
 ## Git 및 제출
 기존 기능별 커밋과 `feature/play` 브랜치 생성·병합 기록을 유지했습니다.
-GitHub 업로드, 원격 저장소를 이용한 clone/pull 실습은 학습자가 직접 수행합니다.
+학습자가 GitHub에 업로드하고, 별도 폴더에서 clone → README 변경 → commit → push를 수행한 뒤 원래 프로젝트에서 pull하여 변경사항을 반영했습니다.
+
+저장소: [Iro-03/Codyssey-E1-2](https://github.com/Iro-03/Codyssey-E1-2)
 단계별 명령은 [GitHub 제출 안내](docs/github_submission.md)를 참고하세요.
 
 - [x] 기본 퀴즈 5개, 클래스 2개, 메뉴와 필수 기능 구현
@@ -182,7 +196,7 @@ GitHub 업로드, 원격 저장소를 이용한 clone/pull 실습은 학습자�
 - [x] 기능별 커밋 10개 이상 및 브랜치 병합 기록
 - [x] 직접 촬영한 실행 화면과 재실행 데이터 유지 증빙 9장 추가
 - [x] 개발 환경·Git 그래프 캡처 추가
-- [ ] GitHub 저장소 생성 및 push
-- [ ] 별도 복제 폴더에서 변경·commit·push 후 원래 폴더에서 pull
+- [x] GitHub 저장소 생성 및 최초 push
+- [x] 별도 복제 폴더에서 변경·commit·push 후 원래 폴더에서 pull
 - [ ] GitHub 저장소 URL 제출
-n별도 복제 폴더에서 README 변경 및 push 실습을 완료했습니다.
+별도 복제 폴더에서 README 변경 및 push 실습을 완료했습니다.
