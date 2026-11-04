@@ -185,3 +185,4 @@ GitHub 업로드, 원격 저장소를 이용한 clone/pull 실습은 학습자�
 - [ ] GitHub 저장소 생성 및 push
 - [ ] 별도 복제 폴더에서 변경·commit·push 후 원래 폴더에서 pull
 - [ ] GitHub 저장소 URL 제출
+n별도 복제 폴더에서 README 변경 및 push 실습을 완료했습니다.
