@@ -56,17 +56,6 @@
             "hint": ""
         },
         {
-            "question": "3+3=?",
-            "choices": [
-                "4",
-                "5",
-                "6",
-                "7"
-            ],
-            "answer": 3,
-            "hint": ""
-        },
-        {
             "question": "Python에서 함수 정의에 사용하는 키워드는?",
             "choices": [
                 "class",
@@ -79,5 +68,5 @@
         }
     ],
     "best_score": 6,
-    "played_count": 10
+    "played_count": 12
 }

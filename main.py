@@ -90,6 +90,7 @@ class QuizGame:
         print("3. 퀴즈 목록")
         print("4. 점수 확인")
         print("5. 종료")
+        print("6. 퀴즈 삭제")
 
     def play(self):
         if not self.quizzes:
@@ -200,6 +201,44 @@ class QuizGame:
         for number, quiz in enumerate(self.quizzes, start=1):
             print(f"[{number}] {quiz.question}")
 
+    def delete_quiz(self):
+        if not self.quizzes:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+
+        self.show_quizzes()
+
+        number = read_number(
+            "삭제할 문제 번호(취소: 0): ",
+            0,
+            len(self.quizzes)
+        )
+
+        if number == 0:
+            print("삭제를 취소했습니다.")
+            return
+
+        quiz = self.quizzes[number - 1]
+        print(f"\n삭제할 문제: {quiz.question}")
+
+        confirmation = read_number(
+            "정말 삭제할까요? (1: 삭제, 2: 취소): ",
+            1,
+            2
+        )
+
+        if confirmation == 2:
+            print("삭제를 취소했습니다.")
+            return
+
+        deleted_quiz = self.quizzes.pop(number - 1)
+
+        if self.save_state():
+            print("퀴즈를 삭제하고 파일에 저장했습니다.")
+        else:
+            self.quizzes.insert(number - 1, deleted_quiz)
+            print("저장에 실패하여 삭제를 취소했습니다.")
+
     def show_score(self):
         if self.played_count == 0:
             print("\n아직 퀴즈를 풀지 않았습니다.")
@@ -302,7 +341,7 @@ class QuizGame:
         try:
             while True:
                 self.show_menu()
-                choice = read_number("선택: ", 1, 5)
+                choice = read_number("선택: ", 1, 6)
 
                 if choice == 1:
                     self.play()
@@ -315,6 +354,8 @@ class QuizGame:
                 elif choice == 5:
                     print("퀴즈 게임을 종료합니다.")
                     break
+                elif choice == 6:
+                    self.delete_quiz()
 
         except (KeyboardInterrupt, EOFError):
             print("\n입력이 중단되어 퀴즈 게임을 종료합니다.")
