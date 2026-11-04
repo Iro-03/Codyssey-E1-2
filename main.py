@@ -1,6 +1,7 @@
 """기초 수학과 컴퓨터 상식 퀴즈 게임 (Python 3.10 이상)."""
 
 import json
+import random
 from pathlib import Path
 
 
@@ -99,10 +100,18 @@ class QuizGame:
             print("등록된 퀴즈가 없습니다.")
             return
 
-        correct_count = 0
-        print(f"\n퀴즈를 시작합니다! 총 {len(self.quizzes)}문제입니다.")
+        question_count = read_number(
+            f"몇 문제를 풀까요? (1~{len(self.quizzes)}): ",
+            1,
+            len(self.quizzes)
+        )
 
-        for number, quiz in enumerate(self.quizzes, start=1):
+        questions = random.sample(self.quizzes, question_count)
+
+        correct_count = 0
+        print(f"\n퀴즈를 시작합니다! 총 {len(questions)}문제입니다.")
+
+        for number, quiz in enumerate(questions, start=1):
             print(f"\n[문제 {number}]")
             quiz.display()
 
@@ -115,7 +124,7 @@ class QuizGame:
                 print(f"오답입니다. 정답은 {quiz.answer}번입니다.")
 
         print(
-            f"\n결과: {len(self.quizzes)}문제 중 "
+            f"\n결과: {len(questions)}문제 중 "
             f"{correct_count}문제 정답!"
         )
 
