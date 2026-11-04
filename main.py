@@ -12,7 +12,35 @@ class Quiz:
 
     def check_answer(self, user_answer):
         return user_answer == self.answer
-    
+
+quizzes = [
+    Quiz(
+        "1 + 1 의 답은?",
+        ["창문", "2", "3", "H"],
+        2
+    ),
+    Quiz(
+        "다음 중 컴퓨터 언어가 아닌 것은?",
+        ["C", "Java", "Air", "Python"],
+        3
+    ),
+    Quiz(
+        "2003년생은 몇 살인가?",
+        ["22", "23", "24", "25"],
+        3
+    ),
+    Quiz(
+        "다음 중 반복문에 사용하는 키워드는?",
+        ["if", "def", "class", "while"],
+        4
+    ),
+    Quiz(
+        "4!의 값은?",
+        ["4", "41", "24", "32"],
+        3
+    ),
+]
+
 while True:
     print("\n" + "=" * 35)
     print("퀴즈 게임")
@@ -22,15 +50,19 @@ while True:
     print("3. 퀴즈 목록")
     print("4. 점수 확인")
     print("5. 종료")
-
+    print("=" * 35)
     choice = input("선택: ").strip()
+    print("=" * 35)
 
     if choice == "1":
         print("퀴즈 풀기를 선택하였습니다.")
     elif choice == "2":
         print("퀴즈 추가를 선택하였습니다.")
     elif choice == "3":
-        print("퀴즈 목록을 선택하였습니다.")
+        print(f"\n등록된 퀴즈 목록: 총 {len(quizzes)}개")
+
+        for number, quiz in enumerate(quizzes, start=1):
+            print(f"[{number}] {quiz.question}")
     elif choice == "4":
         print("점수 확인을 선택하였습니다.")
     elif choice == "5":
