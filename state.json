@@ -49,8 +49,18 @@
                 "32"
             ],
             "answer": 3
+        },
+        {
+            "question": "3+3=?",
+            "choices": [
+                "4",
+                "5",
+                "6",
+                "7"
+            ],
+            "answer": 3
         }
     ],
-    "best_score": 0,
-    "played_count": 0
+    "best_score": 3,
+    "played_count": 1
 }

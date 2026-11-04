@@ -1,5 +1,7 @@
 # 실제 실행 화면 촬영 순서
 
+현재 실행 화면 9장을 촬영하여 루트 README에 반영했습니다. **개발 환경과 Git 그래프는 추가 촬영이 필요합니다.**
+
 프로젝트 폴더에서 `python main.py` 또는 `py main.py`로 실행합니다.
 화면 캡처는 Windows 캡처 도구 또는 VS Code 터미널 화면을 직접 이용하세요.
 예시 이미지를 제출 화면으로 복사하지 말고, 본인의 실행 화면을 촬영하세요.
@@ -11,7 +13,7 @@ PNG 파일은 이 폴더에 아래 이름으로 저장합니다.
    예: '함수 정의 키워드는?' / class, for, def, if / 정답 3.
 4. **list.png**: 3번 선택 후 방금 등록한 문제를 포함한 6개 목록.
 5. **score.png**: 4번 선택 후 최고 점수·완료 횟수.
-6. **restart.png**: 5번으로 종료한 뒤 재실행. 불러오기 안내, 3번의 추가 문제, 4번의 최고 점수 확인. 한 장에 담기 어렵다면 restart_list.png와 restart_score.png도 추가합니다.
+6. **restart_list.png / restart_score.png**: 5번으로 종료한 뒤 재실행. 불러오기 안내, 3번의 추가 문제, 4번의 최고 점수를 각각 확인합니다.
 7. **environment.png**: VS Code 프로젝트 탐색기와 Python 버전, Git 버전. 아래 명령을 직접 실행합니다.
 8. **git_log.png**: 아래 Git 그래프 명령을 실행하고 브랜치 병합과 커밋이 보이게 촬영합니다.
 
@@ -31,10 +33,12 @@ git log --oneline --graph --all
 ```markdown
 ![메뉴](docs/screenshots/menu.png)
 ![퀴즈 풀기](docs/screenshots/play.png)
+![풀이 결과](docs/screenshots/result.png)
 ![퀴즈 추가](docs/screenshots/add_quiz.png)
 ![퀴즈 목록](docs/screenshots/list.png)
 ![최고 점수](docs/screenshots/score.png)
-![재실행](docs/screenshots/restart.png)
+![재실행 후 목록](docs/screenshots/restart_list.png)
+![재실행 후 점수](docs/screenshots/restart_score.png)
 ![개발 환경](docs/screenshots/environment.png)
 ![Git 기록](docs/screenshots/git_log.png)
 ```

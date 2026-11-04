@@ -60,7 +60,8 @@ E1-2/
     ├── verification.md        # 검증 환경과 결과
     ├── github_submission.md   # 직접 업로드 및 clone/pull 실습
     └── screenshots/
-        └── README.md          # 직접 촬영할 화면과 순서
+        ├── README.md          # 촬영 안내
+        └── *.png              # 직접 촬영한 실행 화면 9장
 ```
 
 ## 데이터 파일 설명
@@ -71,7 +72,7 @@ E1-2/
 - **불러오기 시점:** `QuizGame` 객체가 생성될 때.
 - 임시 파일 `state.json.tmp`에 기록한 다음 교체하여 쓰기 도중 기존 파일이 잘리는 것을 줄입니다.
 
-아래는 필드 설명용으로 문제 하나만 표시한 예시입니다. 제출 데이터에는 기본 문제 5개가 있습니다.
+아래는 필드 설명용으로 문제 하나만 표시한 예시입니다. 기본 문제는 5개이며, 현재 저장 파일에는 직접 추가한 문제까지 총 6개가 있습니다.
 
 ```json
 {
@@ -103,21 +104,54 @@ JSON 문법, 인코딩, 필드 구조가 손상되었으면 안내 후 기본 �
 중요한 퀴즈를 편집하거나 오류를 실험하기 전에는 반드시 파일을 백업하세요.
 
 ## 실행 화면
-첨부 예시는 참고 화면이며, 제출 PNG는 학습자가 실제 실행 화면을 직접 캡처합니다.
-아직 촬영하지 않은 화면을 완료한 것으로 표시하지 않습니다.
+직접 실행하고 촬영한 화면입니다. 기본 문제 5개로 플레이한 뒤 새 문제를 추가하고,
+종료 후 다시 실행하여 퀴즈 6개와 최고 점수 3점이 유지되는 것을 확인했습니다.
 
-| 화면 | 저장할 경로 |
-|---|---|
-| 메뉴 | `docs/screenshots/menu.png` |
-| 퀴즈 풀이 및 최종 결과 | `docs/screenshots/play.png` |
-| 퀴즈 추가 완료 | `docs/screenshots/add_quiz.png` |
-| 추가한 문제를 포함한 목록 | `docs/screenshots/list.png` |
-| 최고 점수 | `docs/screenshots/score.png` |
-| 재실행 후 문제·점수 유지 | `docs/screenshots/restart.png` |
-| 개발 환경 | `docs/screenshots/environment.png` |
-| Git 그래프 | `docs/screenshots/git_log.png` |
+### 메뉴
+![게임 메뉴](docs/screenshots/menu.png)
 
-촬영 절차와 README에 이미지를 넣는 방법은 [스크린샷 안내](docs/screenshots/README.md)를 참고하세요.
+### 퀴즈 풀기
+문제와 선택지, 정답·오답 안내를 표시합니다. 정답 번호의 범위를 벗어나면 다시 입력받습니다.
+
+![퀴즈 풀이와 정답 번호 입력 검증](docs/screenshots/play.png)
+
+### 풀이 결과
+5문제 중 3문제를 맞혀 최고 점수 3점을 기록하고 파일에 저장했습니다.
+
+![풀이 결과와 저장 완료](docs/screenshots/result.png)
+
+### 퀴즈 추가
+새 문제 '3+3=?'와 선택지 4개, 정답 번호를 등록하고 저장했습니다.
+
+![새 퀴즈 등록과 저장 완료](docs/screenshots/add_quiz.png)
+
+### 퀴즈 목록
+추가한 문제를 포함하여 총 6문제가 표시됩니다.
+
+![등록된 퀴즈 6개 목록](docs/screenshots/list.png)
+
+### 점수 확인
+최고 점수 3점과 완료한 게임 1회를 표시합니다.
+
+![최고 점수와 완료 횟수](docs/screenshots/score.png)
+
+### 재실행 후 데이터 유지
+프로그램을 종료한 뒤 다시 실행해도 추가한 문제와 점수가 유지됩니다.
+
+![재실행 후 추가한 문제 유지](docs/screenshots/restart_list.png)
+
+![재실행 후 최고 점수 유지](docs/screenshots/restart_score.png)
+
+### 잘못된 입력 처리
+메뉴에서 문자, 범위 밖 숫자, 빈 입력을 입력하면 안내하고 다시 입력받습니다.
+
+![잘못된 메뉴 입력 처리](docs/screenshots/invalid_input.png)
+
+### 추가 촬영 예정
+- 개발 환경: `docs/screenshots/environment.png`
+- Git 커밋·병합 그래프: `docs/screenshots/git_log.png`
+
+촬영 방법은 [스크린샷 안내](docs/screenshots/README.md)를 참고하세요.
 
 ## 검증 방법
 프로젝트 폴더에서 실행합니다.
@@ -139,7 +173,8 @@ GitHub 업로드, 원격 저장소를 이용한 clone/pull 실습은 학습자�
 - [x] 데이터 저장·불러오기 및 입력·파일 오류 처리
 - [x] README 필수 항목 작성
 - [x] 기능별 커밋 10개 이상 및 브랜치 병합 기록
-- [ ] 직접 촬영한 실행 화면·개발 환경·Git 그래프 추가
+- [x] 직접 촬영한 실행 화면과 재실행 데이터 유지 증빙 9장 추가
+- [ ] 개발 환경·Git 그래프 캡처 추가
 - [ ] GitHub 저장소 생성 및 push
 - [ ] 별도 복제 폴더에서 변경·commit·push 후 원래 폴더에서 pull
 - [ ] GitHub 저장소 URL 제출
