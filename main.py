@@ -55,7 +55,40 @@ while True:
     print("=" * 35)
 
     if choice == "1":
-        print("퀴즈 풀기를 선택하였습니다.")
+        if not quizzes:
+            print("등록된 퀴즈가 없습니다.")
+        else:
+            correct_count = 0
+            print(f"\n퀴즈를 시작합니다! 총 {len(quizzes)}문제입니다.")
+
+            for number, quiz in enumerate(quizzes, start=1):
+                print(f"\n[문제 {number}]")
+                quiz.display()
+
+                while True:
+                    answer_text = input("정답 번호(1~4): ").strip()
+
+                    try:
+                        user_answer = int(answer_text)
+                    except ValueError:
+                        print("1~4 사이의 숫자를 입력하세요.")
+                        continue
+
+                    if 1 <= user_answer <= 4:
+                        break
+
+                    print("1~4 사이의 숫자를 입력하세요.")
+
+                if quiz.check_answer(user_answer):
+                    print("정답입니다!")
+                    correct_count += 1
+                else:
+                    print(f"오답입니다. 정답은 {quiz.answer}번입니다.")
+
+            print(
+                f"\n결과: {len(quizzes)}문제 중 "
+                f"{correct_count}문제 정답!"
+            )
     elif choice == "2":
         print("퀴즈 추가를 선택하였습니다.")
     elif choice == "3":
