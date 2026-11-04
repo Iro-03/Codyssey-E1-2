@@ -12,7 +12,7 @@ Python 표준 라이브러리만 사용한 터미널 기반 4지선다 퀴즈 �
 나이 문제는 시간이 지나도 기준이 바뀌지 않도록 '2026년 기준 세는나이'로 명시했습니다.
 
 ## 실행 방법
-- Python **3.10 이상**이 필요합니다. 검증 환경은 Python 3.14.7과 Git 2.55.0입니다.
+- Python **3.10 이상**이 필요합니다. 자동 테스트 환경은 Python 3.14.7이며, 학습자의 실행 환경 캡처는 Python 3.15.0과 Git 2.55.0.windows.5입니다.
 - 외부 패키지 설치는 필요하지 않습니다.
 - VS Code에서 이 프로젝트 폴더를 열고 터미널에서 실행합니다.
 
@@ -61,7 +61,7 @@ E1-2/
     ├── github_submission.md   # 직접 업로드 및 clone/pull 실습
     └── screenshots/
         ├── README.md          # 촬영 안내
-        └── *.png              # 직접 촬영한 실행 화면 9장
+        └── *.png              # 직접 촬영한 실행·환경·Git 화면 11장
 ```
 
 ## 데이터 파일 설명
@@ -147,9 +147,16 @@ JSON 문법, 인코딩, 필드 구조가 손상되었으면 안내 후 기본 �
 
 ![잘못된 메뉴 입력 처리](docs/screenshots/invalid_input.png)
 
-### 추가 촬영 예정
-- 개발 환경: `docs/screenshots/environment.png`
-- Git 커밋·병합 그래프: `docs/screenshots/git_log.png`
+### 개발 환경
+학습자의 실행 환경에서 Python 3.15.0, Git 2.55.0.windows.5 및 Git 작성자 설정을 확인했습니다.
+
+![Python과 Git 버전 및 작성자 설정](docs/screenshots/environment.png)
+
+### Git 커밋과 브랜치 병합 기록
+기능별 커밋과 `feature/play` 브랜치의 작업 및 병합 기록입니다.
+아래 이미지는 촬영 시점의 기록이며, 이후 README 보완 커밋이 추가될 수 있습니다.
+
+![기능별 커밋과 브랜치 병합 그래프](docs/screenshots/git_log.png)
 
 촬영 방법은 [스크린샷 안내](docs/screenshots/README.md)를 참고하세요.
 
@@ -174,7 +181,7 @@ GitHub 업로드, 원격 저장소를 이용한 clone/pull 실습은 학습자�
 - [x] README 필수 항목 작성
 - [x] 기능별 커밋 10개 이상 및 브랜치 병합 기록
 - [x] 직접 촬영한 실행 화면과 재실행 데이터 유지 증빙 9장 추가
-- [ ] 개발 환경·Git 그래프 캡처 추가
+- [x] 개발 환경·Git 그래프 캡처 추가
 - [ ] GitHub 저장소 생성 및 push
 - [ ] 별도 복제 폴더에서 변경·commit·push 후 원래 폴더에서 pull
 - [ ] GitHub 저장소 URL 제출
