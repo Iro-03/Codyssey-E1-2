@@ -4,15 +4,14 @@ import json
 import random
 from pathlib import Path
 
-
 STATE_PATH = Path(__file__).resolve().parent / "state.json"
 
-
 class Quiz:
-    def __init__(self, question, choices, answer):
+    def __init__(self, question, choices, answer, hint=""):
         self.question = question
         self.choices = choices
         self.answer = answer
+        self.hint = hint
 
     def display(self):
         print(self.question)
@@ -23,7 +22,6 @@ class Quiz:
     def check_answer(self, user_answer):
         return user_answer == self.answer
 
-
 def read_non_empty_text(prompt):
     while True:
         text = input(prompt).strip()
@@ -32,7 +30,6 @@ def read_non_empty_text(prompt):
             return text
 
         print("내용을 입력하세요. 빈 입력은 사용할 수 없습니다.")
-
 
 def read_number(prompt, minimum, maximum):
     while True:
@@ -48,7 +45,6 @@ def read_number(prompt, minimum, maximum):
             return number
 
         print(f"{minimum}~{maximum} 사이의 숫자를 입력하세요.")
-
 
 class QuizGame:
     def __init__(self, state_path=STATE_PATH):
@@ -148,8 +144,9 @@ class QuizGame:
             choices.append(text)
 
         answer = read_number("정답 번호(1~4): ", 1, 4)
+        hint = input("힌트(없으면 Enter): ").strip()
 
-        new_quiz = Quiz(question, choices, answer)
+        new_quiz = Quiz(question, choices, answer, hint)
         self.quizzes.append(new_quiz)
 
         print("퀴즈가 추가되었습니다!")
@@ -184,6 +181,7 @@ class QuizGame:
                     "question": quiz.question,
                     "choices": quiz.choices,
                     "answer": quiz.answer,
+                    "hint": quiz.hint,
                 }
                 for quiz in self.quizzes
             ],
@@ -231,7 +229,10 @@ class QuizGame:
                 question = item["question"]
                 choices = item["choices"]
                 answer = item["answer"]
+                hint = item.get("hint", "")
 
+                if not isinstance(hint, str):
+                    raise ValueError("힌트는 문자열이어야 합니다.")
                 if not isinstance(question, str) or not question.strip():
                     raise ValueError("문제는 비어 있지 않은 문자열이어야 합니다.")
                 if not isinstance(choices, list) or len(choices) != 4:
@@ -241,7 +242,7 @@ class QuizGame:
                 if type(answer) is not int or not 1 <= answer <= 4:
                     raise ValueError("정답 번호는 1~4의 정수여야 합니다.")
 
-                loaded_quizzes.append(Quiz(question, choices, answer))
+                loaded_quizzes.append(Quiz(question, choices, answer, hint))
 
         except FileNotFoundError:
             print("저장 파일이 없어 기본 퀴즈로 시작합니다.")
@@ -284,7 +285,6 @@ class QuizGame:
         finally:
             if self.save_state():
                 print("데이터를 저장했습니다.")
-
 
 if __name__ == "__main__":
     game = QuizGame()
