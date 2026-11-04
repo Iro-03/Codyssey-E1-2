@@ -50,6 +50,9 @@ quizzes = [
     ),
 ]
 
+best_score = 0
+played_count = 0
+
 while True:
     print("\n" + "=" * 35)
     print("퀴즈 게임")
@@ -98,6 +101,13 @@ while True:
                 f"\n결과: {len(quizzes)}문제 중 "
                 f"{correct_count}문제 정답!"
             )
+
+            played_count += 1
+
+            if played_count == 1 or correct_count > best_score:
+                best_score = correct_count
+                print(f"새로운 최고 기록입니다! {best_score}점")
+
     elif choice == "2":
         print("\n새로운 퀴즈를 추가합니다.")
 
@@ -133,7 +143,12 @@ while True:
         for number, quiz in enumerate(quizzes, start=1):
             print(f"[{number}] {quiz.question}")
     elif choice == "4":
-        print("점수 확인을 선택하였습니다.")
+        if played_count == 0:
+            print("\n아직 퀴즈를 풀지 않았습니다.")
+        else:
+            print(f"\n최고 점수: {best_score}점")
+            print("점수 기준: 정답 1개당 1점")
+            print(f"완료한 게임: {played_count}회")
     elif choice == "5":
         print("퀴즈 게임을 종료합니다.")
         break
