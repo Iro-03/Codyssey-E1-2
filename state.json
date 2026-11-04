@@ -34,17 +34,6 @@
             "hint": ""
         },
         {
-            "question": "다음 중 반복문에 사용하는 키워드는?",
-            "choices": [
-                "if",
-                "def",
-                "class",
-                "while"
-            ],
-            "answer": 4,
-            "hint": ""
-        },
-        {
             "question": "4!의 값은?",
             "choices": [
                 "4",
@@ -68,7 +57,7 @@
         }
     ],
     "best_score": 6,
-    "played_count": 14,
+    "played_count": 16,
     "history": [
         {
             "played_at": "2026-11-04T21:10:21+09:00",
@@ -80,6 +69,18 @@
             "played_at": "2026-11-04T21:10:35+09:00",
             "total_questions": 2,
             "correct_count": 2,
+            "score": 2
+        },
+        {
+            "played_at": "2026-11-04T21:38:53+09:00",
+            "total_questions": 3,
+            "correct_count": 3,
+            "score": 3
+        },
+        {
+            "played_at": "2026-11-04T21:40:15+09:00",
+            "total_questions": 3,
+            "correct_count": 3,
             "score": 2
         }
     ]

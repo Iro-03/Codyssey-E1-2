@@ -56,3 +56,15 @@ git commit -m "Docs: 직접 실행한 화면과 재실행 데이터 유지 증�
 - pull.png: 복제 폴더에서 push 후 원래 폴더에서 pull 및 UTF-8로 문장 확인
 
 두 화면 모두 촬영 및 README 반영을 완료했습니다.
+
+
+## 보너스 기능 캡처 완료
+
+- bonus_menu.png: 확장 메뉴
+- bonus_select.png: 문제 수 선택과 무작위 출제
+- bonus_hint.png: 힌트 조회 및 점수 차감
+- bonus_delete.png: 삭제 확인과 저장·목록 반영
+- bonus_history.png: 날짜·시간·문제 수·점수 기록 조회
+- bonus_tests.png: 보너스 버전 21개 테스트 통과
+
+기존 13장과 함께 총 19장의 실제 화면을 README에 반영했습니다.
