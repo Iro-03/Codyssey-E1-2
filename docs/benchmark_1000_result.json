@@ -1,0 +1,23 @@
+{
+  "python": "3.14.7",
+  "platform": "Windows",
+  "source_sha256": "39f895cde9586657cb35cb220ae7de29af27f1df0df4d06e1d850eea97e41e01",
+  "synthetic_quizzes": 1000,
+  "synthetic_history_records": 1000,
+  "sample_count": 100,
+  "repeats": 5,
+  "file_bytes": 460997,
+  "save": {
+    "median_ms": 55.54,
+    "max_peak_kib": 374.99
+  },
+  "load": {
+    "median_ms": 11.868,
+    "max_peak_kib": 2274.51
+  },
+  "sample": {
+    "median_ms": 0.099,
+    "max_peak_kib": 10.0
+  },
+  "notes": "Synthetic data; warm local filesystem; time includes tracemalloc overhead; peak is Python-tracked incremental allocations, not total process RAM. No console rendering or user input measured."
+}

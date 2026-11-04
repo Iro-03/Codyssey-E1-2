@@ -1,0 +1,42 @@
+Git evidence snapshot (before documentation update)
+Source commit: 08a4cdf
+No network fetch was performed. origin/main is the locally cached remote-tracking ref.
+
+$ git rev-list --count --no-merges HEAD
+25
+
+$ git rev-list --count --no-merges origin/main
+25
+
+$ git log --oneline --graph --all
+*   08a4cdf Merge: 보너스 기능과 테스트 및 실행 증빙 병합
+|\  
+| * 51a5b40 Docs: 보너스 실행 캡처와 저장 데이터 및 완료 체크 반영
+| * 42eb9f9 Test: 보너스 기능과 변경된 입력 흐름 검증 추가
+| * 65e6201 Docs: 보너스 테스트 21개 통과 증빙과 최종 점수 기준 반영
+| * 51180bc Fix: 최고 점수 비교에 힌트 차감 후 점수 적용
+| * 7b266a8 Docs: 보너스 기능과 힌트 점수 및 저장 구조 설명 갱신
+| * d76dfac Feat: 완료한 게임의 날짜와 문제 수 및 점수 기록 저장과 조회 구현
+| * 420bafc Feat: 퀴즈 삭제 확인과 파일 저장 및 실패 시 복구 구현
+| * 8b2dded Feat: 풀이 중 힌트 조회와 문제별 점수 차감 구현
+| * 957bb6a Feat: 퀴즈 힌트 입력과 JSON 저장 및 불러오기 추가
+| * 849b814 Feat: 무작위 출제와 출제 문제 수 선택 구현
+|/  
+* 4bc5695 Docs: 제출 완료 체크와 보너스 과제 구현 계획 추가
+* 411bd3d Docs: clone과 pull 실습 증빙 및 제출 체크리스트 반영
+* a952378 Docs: 복제 폴더에서 README 변경 실습
+* beb6e01 Docs: 개발 환경과 Git 그래프 캡처를 README에 추가
+* ab40477 Docs: 실제 실행 화면 9장과 데이터 유지 증빙을 README에 반영
+* 961ad3e Docs: 과제 README와 캡처 및 GitHub 제출 실습 안내 완성
+* 48bcff5 Test: 데이터 유지와 입력 및 파일 오류 회귀 검증 추가
+* e3b677c Feat: JSON 영속성과 데이터 검증 및 안전한 종료 저장 구현
+* 5cd2cf5 Refactor: QuizGame 클래스로 게임 관리와 기능별 메서드 분리
+* 801e185 Feat: 최고 점수와 완료 횟수 및 미플레이 상태 표시 구현
+* 1f20667 Feat: 퀴즈 추가와 빈 입력 및 정답 번호 검증 구현
+*   5f302df Merge: 퀴즈 풀기 기능 병합
+|\  
+| * b3333f4 Feat: 퀴즈 출제와 정답 판정 및 결과 출력 구현
+|/  
+* 4c5fdd8 Feat: 간단한 퀴즈 5개 와 목록 출력 추가
+* e1a5088 Feat: Quiz 클래스와 문제 출력 및 정답 확인 메서드 추가
+* 5483d37 Feat: 메뉴 반복과 입력 처리 구현
