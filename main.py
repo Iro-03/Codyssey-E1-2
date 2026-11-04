@@ -166,8 +166,8 @@ class QuizGame:
 
         self.played_count += 1
 
-        if self.played_count == 1 or correct_count > self.best_score:
-            self.best_score = correct_count
+        if self.played_count == 1 or game_score > self.best_score:
+            self.best_score = game_score
             print(f"새로운 최고 기록입니다! {self.best_score}점")
 
         record = {
