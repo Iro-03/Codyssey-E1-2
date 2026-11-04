@@ -3,6 +3,7 @@
 import json
 import random
 from pathlib import Path
+from datetime import datetime
 
 STATE_PATH = Path(__file__).resolve().parent / "state.json"
 
@@ -79,6 +80,7 @@ class QuizGame:
 
         self.best_score = 0
         self.played_count = 0
+        self.history = []
         self.load_state()
 
     def show_menu(self):
@@ -91,6 +93,7 @@ class QuizGame:
         print("4. 점수 확인")
         print("5. 종료")
         print("6. 퀴즈 삭제")
+        print("7. 게임 기록")
 
     def play(self):
         if not self.quizzes:
@@ -166,6 +169,17 @@ class QuizGame:
         if self.played_count == 1 or correct_count > self.best_score:
             self.best_score = correct_count
             print(f"새로운 최고 기록입니다! {self.best_score}점")
+
+        record = {
+            "played_at": datetime.now().astimezone().isoformat(
+                timespec="seconds"
+            ),
+            "total_questions": len(questions),
+            "correct_count": correct_count,
+            "score": game_score,
+        }
+
+        self.history.append(record)
 
         if self.save_state():
             print("파일 저장이 완료되었습니다.")
@@ -262,6 +276,7 @@ class QuizGame:
             ],
             "best_score": self.best_score,
             "played_count": self.played_count,
+            "history": self.history,
         }
         temporary_path = self.state_path.with_suffix(".json.tmp")
 
@@ -287,7 +302,34 @@ class QuizGame:
             quizzes_data = data["quizzes"]
             best_score = data["best_score"]
             played_count = data["played_count"]
+            history = data.get("history", [])
 
+            if not isinstance(history, list):
+                raise ValueError("history는 목록이어야 합니다.")
+
+            for record in history:
+                if not isinstance(record, dict):
+                    raise ValueError("게임 기록은 객체여야 합니다.")
+
+                played_at = record["played_at"]
+                total = record["total_questions"]
+                correct = record["correct_count"]
+                score = record["score"]
+
+                if not isinstance(played_at, str):
+                    raise ValueError("기록 시간은 문자열이어야 합니다.")
+
+                datetime.fromisoformat(played_at)
+
+                if type(total) is not int or total < 1:
+                    raise ValueError("출제 문제 수는 1 이상의 정수여야 합니다.")
+
+                if type(correct) is not int or not 0 <= correct <= total:
+                    raise ValueError("정답 수가 올바르지 않습니다.")
+
+                if type(score) is not int or not 0 <= score <= correct:
+                    raise ValueError("기록 점수가 올바르지 않습니다.")
+            
             if not isinstance(quizzes_data, list):
                 raise ValueError("quizzes는 목록이어야 합니다.")
             if type(best_score) is not int or best_score < 0:
@@ -332,6 +374,7 @@ class QuizGame:
         self.quizzes = loaded_quizzes
         self.best_score = best_score
         self.played_count = played_count
+        self.history = history
         print(
             f"저장된 데이터를 불러왔습니다. "
             f"(퀴즈 {len(self.quizzes)}개, 최고 점수 {self.best_score}점)"
@@ -341,7 +384,7 @@ class QuizGame:
         try:
             while True:
                 self.show_menu()
-                choice = read_number("선택: ", 1, 6)
+                choice = read_number("선택: ", 1, 7)
 
                 if choice == 1:
                     self.play()
@@ -356,12 +399,31 @@ class QuizGame:
                     break
                 elif choice == 6:
                     self.delete_quiz()
-
+                elif choice == 7:
+                    self.show_history()
         except (KeyboardInterrupt, EOFError):
             print("\n입력이 중단되어 퀴즈 게임을 종료합니다.")
         finally:
             if self.save_state():
                 print("데이터를 저장했습니다.")
+
+    def show_history(self):
+        if not self.history:
+            print("\n저장된 게임 기록이 없습니다.")
+            return
+
+        print(f"\n게임 기록: 총 {len(self.history)}회")
+        print("최신 기록부터 표시합니다.")
+
+        for number, record in enumerate(
+            reversed(self.history),
+            start=1
+        ):
+            print(f"\n[기록 {number}]")
+            print(f"날짜·시간: {record['played_at']}")
+            print(f"출제 문제 수: {record['total_questions']}")
+            print(f"정답 수: {record['correct_count']}")
+            print(f"힌트 차감 후 점수: {record['score']}점")
 
 if __name__ == "__main__":
     game = QuizGame()
